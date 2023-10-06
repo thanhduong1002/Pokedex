@@ -3,6 +3,8 @@ package com.example.pokedex.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.pokedex.data.remote.api.ServiceBuilder
+import com.example.pokedex.data.remote.api.ServiceInterface
 import com.example.pokedex.models.Cart
 import com.example.pokedex.models.Food
 import com.example.pokedex.data.repository.CartRepository
@@ -27,5 +29,8 @@ class CartViewModel(private var cartRepository: CartRepository): ViewModel() {
 
     fun updateListFoods(listFoods: List<Food>) {
         cartRepository.updateListFoods(listFoods)
+    }
+    fun getDirection(parameters: String, destination: String, apiKey: String) {
+        cartRepository.getDirection(parameters, destination, apiKey)
     }
 }

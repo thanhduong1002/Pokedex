@@ -2,8 +2,23 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Pokedex" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimary">@color/orange</item>
     </style>
 
-    <style name="Theme.Pokedex" parent="Base.Theme.Pokedex" />
+    <style name="Theme.Pokdex" parent="Base.Theme.Pokedex" />
+
+    <style name="Theme.Pokdex.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
+        <!-- Radius of the outer bound of widgets to make the rounded corners -->
+        <item name="appWidgetRadius">16dp</item>
+        <!--
+        Radius of the inner view's bound of widgets to make the rounded corners.
+        It needs to be 8dp or less than the value of appWidgetRadius
+        -->
+        <item name="appWidgetInnerRadius">8dp</item>
+    </style>
+
+    <style name="Theme.Pokdex.AppWidgetContainer" parent="Theme.Pokdex.AppWidgetContainerParent">
+        <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
+        <item name="appWidgetPadding">16dp</item>
+    </style>
 </resources>

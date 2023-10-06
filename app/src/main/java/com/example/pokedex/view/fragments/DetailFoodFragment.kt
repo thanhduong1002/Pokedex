@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import com.example.pokedex.DarkModeUtil
 import com.example.pokedex.R
 import com.example.pokedex.data.dao.CartDao
 import com.example.pokedex.data.database.AppDatabase
@@ -37,11 +39,12 @@ class DetailFoodFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_detail_food, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val appDatabase = AppDatabase.getDatabase(requireContext())
+
         cartDao = appDatabase.cartDao()
         cartRepository = CartRepository(cartDao, appDatabase)
         cartViewModel = CartViewModel(cartRepository)
@@ -141,6 +144,12 @@ class DetailFoodFragment : Fragment() {
                     cartViewModel.updateListFoods(foodList)
                 }
             }
+        }
+
+        if (DarkModeUtil.isDarkMode) {
+            val textColorStateList = ContextCompat.getColorStateList(requireContext(), R.drawable.button_detail_food_night)
+
+            buttonAdd.setTextColor(textColorStateList)
         }
     }
 

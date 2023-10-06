@@ -1,5 +1,6 @@
 package com.example.pokedex.view.adapters
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -10,8 +11,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pokedex.DarkModeUtil
 import com.example.pokedex.R
 import com.example.pokedex.view.fragments.DetailFoodFragment
 import com.example.pokedex.models.Food
@@ -38,6 +41,7 @@ class PopularAdapter(private var arrFoods: List<Food>): RecyclerView.Adapter<Pop
         return arrFoods.size
     }
 
+    @SuppressLint("ResourceType")
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
         val item = arrFoods[position]
@@ -51,6 +55,12 @@ class PopularAdapter(private var arrFoods: List<Food>): RecyclerView.Adapter<Pop
             bundle.putString(DetailFoodFragment.imageFood, item.imageFood.toString())
             bundle.putString(DetailFoodFragment.priceFood, item.price.toString())
             holder.itemView.findNavController().navigate(R.id.action_homeFragment_to_detailFoodFragment, bundle)
+        }
+
+        if (DarkModeUtil.isDarkMode) {
+            val textColorStateList = ContextCompat.getColorStateList(holder.addButton.context, R.drawable.button_text_color_night)
+
+            holder.addButton.setTextColor(textColorStateList)
         }
     }
 }

@@ -1,24 +1,28 @@
 package com.example.pokedex.view.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pokedex.DarkModeUtil
 import com.example.pokedex.R
 import com.example.pokedex.view.adapters.CartAdapter
 import com.example.pokedex.data.dao.CartDao
 import com.example.pokedex.data.database.AppDatabase
 import com.example.pokedex.data.repository.CartRepository
+import com.example.pokedex.models.Cart
 import com.example.pokedex.view.activities.CheckoutActivity
 import com.example.pokedex.viewmodels.CartViewModel
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +42,7 @@ class CartFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_cart, container, false)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,15 +55,29 @@ class CartFragment : Fragment() {
         cartRepository = CartRepository(cartDao, appDatabase)
         cartViewModel = CartViewModel(cartRepository)
 
-        cartViewModel.foodList.observe(viewLifecycleOwner) {foodList ->
-            totalPriceText.text = "$${cartAdapter.calculateTotalPrice(foodList)}"
-            cartAdapter.setData(foodList)
-            cartAdapter.notifyDataSetChanged()
-        }
-
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                cartViewModel.getCartHaveId1()
+            val cart: Cart = cartViewModel.getCartById1()
+
+            if (cart == null) {
+                val dialog = AlertDialog.Builder(requireContext())
+                val textView = TextView(requireContext())
+
+                with(textView) {
+                    text = "Our alert"
+                    textSize = 20.0F
+                    setTypeface(null, Typeface.BOLD)
+                    gravity = Gravity.CENTER
+                }
+
+                dialog.setMessage("Empty cart!")
+                dialog.setNeutralButton("Dismiss") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                dialog.show()
+            } else {
+                totalPriceText.text = "$${cartAdapter.calculateTotalPrice(cart.listFoods)}"
+                cartAdapter.setData(cart.listFoods)
+                cartAdapter.notifyDataSetChanged()
             }
         }
 
@@ -81,6 +99,12 @@ class CartFragment : Fragment() {
 
             intent.putExtras(bundle)
             startActivity(intent)
+        }
+
+        if (DarkModeUtil.isDarkMode) {
+            val textColorStateList = ContextCompat.getColorStateList(requireContext(), R.drawable.button_text_color_night)
+
+            orderButton.setTextColor(textColorStateList)
         }
     }
 }

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pokedex"
-        minSdk = 19
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -35,9 +35,13 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    implementation("com.google.android.libraries.places:places:3.2.0")
     val nav_version = "2.7.0"
     val room_version = "2.5.0"
 
@@ -71,4 +75,11 @@ dependencies {
 
     //Map
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+
+    //analytics
+    implementation("com.google.android.gms:play-services-analytics:18.0.3")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.4.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
 }

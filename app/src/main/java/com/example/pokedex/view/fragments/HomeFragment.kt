@@ -6,9 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pokedex.DarkModeUtil
 import com.example.pokedex.R
 import com.example.pokedex.view.adapters.CategoryAdapter
 import com.example.pokedex.view.adapters.PopularAdapter
@@ -44,11 +48,14 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "ResourceAsColor", "ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val appDatabase = AppDatabase.getDatabase(requireContext())
+
+        val textViewOrder: TextView = view.findViewById(R.id.textView3)
+        val buttonOrder: Button = view. findViewById(R.id.button)
 
         foodDao = appDatabase.foodDao()
         foodRepository = FoodRepository(foodDao, appDatabase)
@@ -101,13 +108,22 @@ class HomeFragment : Fragment() {
         }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewPopular)
+
         popularAdapter = PopularAdapter(emptyList())
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = popularAdapter
 
         val recyclerType: RecyclerView = view.findViewById(R.id.recyclerViewCategory)
+
         categoryAdapter = CategoryAdapter(emptyList())
         recyclerType.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerType.adapter = categoryAdapter
+
+        if (DarkModeUtil.isDarkMode) {
+            val textColorStateList = ContextCompat.getColorStateList(requireContext(), R.drawable.button_text_color_night)
+
+            textViewOrder.setTextColor(textColorStateList)
+            buttonOrder.setTextColor(textColorStateList)
+        }
     }
 }
